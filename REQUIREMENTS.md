@@ -5,20 +5,20 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 ## API Endpoints
 #### Products
-- Index 
-- Show
-- Create [token required]
-- [OPTIONAL] Top 5 most popular products 
-- [OPTIONAL] Products by category (args: product category)
+- Index route: '/products' [GET]
+- Show route: '/products/:id' [GET]
+- Create [token required]: '/products' [POST]
+- [OPTIONAL] Top 5 most popular products:  '/top-5-products' [GET]
+- [OPTIONAL] Products by category (args: product category): '/product-by-category/:category' [GET]
 
 #### Users
-- Index [token required]
-- Show [token required]
-- Create N[token required]
+- Index [token required]: '/users' [GET]
+- Show [token required]: 'users/:id' [GET]
+- Create N[token required]: '/users' [POST]
 
 #### Orders
-- Current Order by user (args: user id)[token required]
-- [OPTIONAL] Completed Orders by user (args: user id)[token required]
+- Current Order by user (args: user id)[token required]: '/order-by-user/:user-id' [GET]
+- [OPTIONAL] Completed Orders by user (args: user id)[token required]: '/completed-orders/:user-id' [GET]
 
 ## Data Shapes
 #### Product
@@ -26,12 +26,16 @@ These are the notes from a meeting with the frontend developer that describe wha
 - name
 - price
 - [OPTIONAL] category
+Table: 
+    products(id: SERIAL PRIMARY KEY, productName: VARCHAR(100), price: integer, productCategory: VARCHAR(50))
 
 #### User
 - id
 - firstName
 - lastName
 - password
+Table: 
+    users(id: SERIAL PRIMARY KEY, firstName: VARCHAR(100), lastName: VARCHAR(100), password_digest: VARCHAR)
 
 #### Orders
 - id
@@ -39,4 +43,8 @@ These are the notes from a meeting with the frontend developer that describe wha
 - quantity of each product in the order
 - user_id
 - status of order (active or complete)
+Table: 
+    orders(id: SERIAL PRIMARY KEY, user_id integer[foreign key to users table], status BOOLEAN)
+Table: 
+    order_products (id: SERIAL PRIMARY KEY, order_id: integer[foreign key to orders table], product_id: integer[foreign key to products table], quantity integer)
 
