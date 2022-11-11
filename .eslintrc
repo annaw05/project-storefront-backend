@@ -1,4 +1,4 @@
-{
+  {
     "root": true,
     "parser": "@typescript-eslint/parser",
     "plugins": [
@@ -10,6 +10,11 @@
       "plugin:@typescript-eslint/recommended"
     ],
     "rules": {
-        
+      "@typescript-eslint/ban-ts-comment": [
+        "error",
+        {
+          "ts-ignore": "allow-with-description"
+        }
+      ]
     }
   }
