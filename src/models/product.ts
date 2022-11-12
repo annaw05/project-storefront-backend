@@ -1,3 +1,4 @@
+//product model
 import Client from '../database';
 
 export type Product = {
@@ -11,7 +12,7 @@ export class ProductStore {
   /* - Index route: '/products' [GET]*/
   async index(): Promise<Product[]> {
     try {
-      //@ts-ignore
+      
       const conn = await Client.connect();
       const sql = 'SELECT * FROM products';
 
@@ -28,7 +29,7 @@ export class ProductStore {
   /**- Show route: '/products/:id' [GET] */
   async show(id: number): Promise<Product> {
     try {
-      //@ts-ignore
+      
       const conn = await Client.connect();
       const sql = 'SELECT * FROM products WHERE id=($1)';
 
@@ -45,7 +46,7 @@ export class ProductStore {
   /*- Create [token required]: '/products' [POST]*/
   async create(p: Product): Promise<Product> {
     try {
-      //@ts-ignore
+      
       const conn = await Client.connect();
       const sql =
         'INSERT INTO products (product_name, price, product_category) VALUES ($1, $2, $3) RETURNING *';
@@ -66,7 +67,7 @@ export class ProductStore {
 
   async delete(id: number): Promise<Product> {
     try {
-      //@ts-ignore
+      
       const conn = await Client.connect();
       const sql = 'DELETE FROM products WHERE id=($1)';
 
@@ -80,10 +81,10 @@ export class ProductStore {
     }
   }
 
-  /*  - [OPTIONAL] Products by category (args: product category): '/product-by-category/:category' [GET]*/
+  /*
+  //  - [OPTIONAL] Products by category (args: product category): '/product-by-category/:category' [GET]
   async productsByCategory(product_category: string): Promise<Product[]> {
     try {
-      //@ts-ignore
       const conn = await Client.connect();
       const sql = 'SELECT * FROM products WHERE product_category=($1)';
 
@@ -98,14 +99,16 @@ export class ProductStore {
       );
     }
   }
+*/
 
+/*
   //- [OPTIONAL] Top 5 most popular products:  '/top-5-products' [GET]
   // -> Services -> Dashboard????
   // async topExpensiveProducts (): Promise<{name: string, price: number}[]> {
 
   async topFiveProducts(): Promise<Product[]> {
     try {
-      //@ts-ignore
+      
       const conn = await Client.connect();
       const sql =
         'SELECT product_name, price FROM products ORDER BY price DESC LIMIT 5';
@@ -119,4 +122,5 @@ export class ProductStore {
       throw new Error(`unable get top 5 products: ${err}`);
     }
   }
+  */
 }

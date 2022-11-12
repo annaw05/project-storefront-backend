@@ -10,7 +10,6 @@ export class OrderStore {
     
     async index(): Promise<Order[]> {
         try {
-            //@ts-ignore
             const conn = await Client.connect();
             const sql = 'SELECT * FROM orders';
 
@@ -26,7 +25,7 @@ export class OrderStore {
 
     async show(id: number): Promise<Order> {
         try {
-            //@ts-ignore
+            
             const conn = await Client.connect();
             const sql = 'SELECT * FROM orders WHERE id=($1)';
 
@@ -42,7 +41,7 @@ export class OrderStore {
     
     async create(o: Order): Promise<Order> {
         try {
-            //@ts-ignore
+            
             const conn = await Client.connect();
             const sql = 'INSERT INTO orders (user_id, order_status) VALUES ($1, $2) RETURNING *';
 
@@ -58,9 +57,9 @@ export class OrderStore {
 
     async closeOrderStatus(id: number): Promise<Order> {
         try {
-            //@ts-ignore
+           
             const conn = await Client.connect();
-            const sql = 'UPDATE orders SET order_status="true" WHERE id=($1) RETURNING *';
+            const sql = 'UPDATE orders SET order_status="false" WHERE id=($1) RETURNING *';
 
             const result=await conn.query(sql,[id]);
             const order = result.rows[0];
@@ -74,7 +73,7 @@ export class OrderStore {
 
     async delete(id: number): Promise<Order> {
         try {
-            //@ts-ignore
+            
             const conn = await Client.connect();
             const sql = 'DELETE FROM orders WHERE id=($1)';
 
@@ -88,12 +87,12 @@ export class OrderStore {
         }
     }
 
-
+/*
     //- Current Order by user (args: user id)[token required]: '/order-by-user/:user-id' [GET]
 
     async orderByUser(user_id: number): Promise<Order[]> {
         try {
-            //@ts-ignore: 
+           
             const conn = await Client.connect();
             const sql = 'SELECT * FROM orders WHERE user_id=($1)';
 
@@ -106,12 +105,13 @@ export class OrderStore {
             throw new Error(`unable to find order by user ${user_id}: ${error}`);
         }
     }
-
+*/
+    /*
     //- [OPTIONAL] Completed Orders by user (args: user id)[token required]: '/completed-orders/:user-id' [GET]
     
     async completedOrderByUser(user_id: number): Promise<Order[]> {
         try {
-            //@ts-ignore
+            
             const conn = await Client.connect();
             const sql = 'SELECT * FROM orders WHERE user_id=($1) AND order_status="true"';
 
@@ -124,10 +124,10 @@ export class OrderStore {
             throw new Error(`unable to find completed orders by user ${user_id}: ${error}`);
         }
     }
-
+*/
     async addProduct(quantity: number, order_id: number, product_id: number):Promise<Order>{
         try{
-            //@ts-ignore
+            
             const conn = await Client.connect();
             const sql = 'INSERT INTO order_products (quantity, order_id, product_id) VALUES ($1, $2, $3) RETURNING *';
             
