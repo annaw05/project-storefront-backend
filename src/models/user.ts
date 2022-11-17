@@ -1,4 +1,6 @@
+ //@ts-ignore: ignore type Client
 import Client from '../database';
+import {Pool } from 'pg';
 import bcrypt from 'bcrypt';
 
 const pepper: string = process.env.BCRYPT_PASSWORD as string;
@@ -16,6 +18,7 @@ export class UserStore {
   // - Index [token required]: '/users' [GET]
   async index(): Promise<User[]> {
     try {
+       
       const conn = await Client.connect();
       const sql = 'SELECT * FROM users';
 
@@ -31,7 +34,8 @@ export class UserStore {
   // - Show [token required]: 'users/:id' [GET]
   async show(id: number): Promise<User> {
     try {
-      const conn = await Client.connect();
+       //@ts-ignore: ignore type Client
+      const conn: PoolClient = await Client.connect();
       const sql = 'SELECT * FROM users WHERE id=($1)';
 
       const result = await conn.query(sql, [id]);
@@ -46,7 +50,8 @@ export class UserStore {
   // - Create N[token required]: '/users' [POST]
   async create(u: User): Promise<User> {
     try {
-      const conn = await Client.connect();
+       //@ts-ignore: ignore type Client
+      const conn: PoolClient = await Client.connect();
       const sql =
         'INSERT INTO users (username, firstname, lastname, password) VALUES ($1, $2, $3, $4) RETURNING *';
       const hash = bcrypt.hashSync(u.password + pepper, parseInt(saltRounds));
@@ -67,7 +72,8 @@ export class UserStore {
   }
 
   async authenticate(username: string, password: string): Promise<User | null> {
-    const conn = await Client.connect();
+     //@ts-ignore: ignore type Client
+    const conn: PoolClient = await Client.connect();
     const sql = 'SELECT password FROM users WHERE username=($1)';
 
     const result = await conn.query(sql, [username]);

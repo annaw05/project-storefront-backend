@@ -1,4 +1,5 @@
 //model for dashboard queries
+  //@ts-ignore: ignore type Client
 import Client from '../database';
 
 export class dashboardQueries {
@@ -7,6 +8,7 @@ export class dashboardQueries {
     user_id: number
   ): Promise<{ id: number; user_id: number; order_status: boolean }[]> {
     try {
+        //@ts-ignore: ignore type Client
       const conn = await Client.connect();
       const sql = 'SELECT * FROM orders WHERE user_id=($1)';
 
@@ -25,6 +27,7 @@ export class dashboardQueries {
     user_id: number
   ): Promise<{ id: number; user_id: number; order_status: boolean }[]> {
     try {
+        //@ts-ignore: ignore type Client
       const conn = await Client.connect();
       const sql =
         'SELECT * FROM orders WHERE user_id=($1) AND order_status="true"';
@@ -42,9 +45,7 @@ export class dashboardQueries {
   }
 
   //  - [OPTIONAL] Products by category (args: product category): '/product-by-category/:category' [GET]
-  async productsByCategory(
-    product_category: string
-  ): Promise<
+  async productsByCategory(product_category: string): Promise<
     {
       id: number;
       product_name: string;
@@ -53,6 +54,7 @@ export class dashboardQueries {
     }[]
   > {
     try {
+        //@ts-ignore: ignore type Client
       const conn = await Client.connect();
       const sql = 'SELECT * FROM products WHERE product_category=($1)';
 
@@ -81,6 +83,7 @@ export class dashboardQueries {
     }[]
   > {
     try {
+        //@ts-ignore: ignore type Client
       const conn = await Client.connect();
       const sql =
         'SELECT product_name, price FROM products ORDER BY price DESC LIMIT 5';

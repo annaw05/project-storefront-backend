@@ -48,7 +48,7 @@ const orderByUser = async (req: Request, res: Response) => {
     res.json(orders);
   };
 */
-  /*
+/*
   const completedOrderByUser = async (req: Request, res: Response) => {
     const user_id: number = parseInt(req.params.user_id);
     const orders = await store.completedOrderByUser(user_id);
@@ -56,24 +56,24 @@ const orderByUser = async (req: Request, res: Response) => {
   };
   */
 
-  const addProduct = async (req: Request, res: Response) => {
-    const quantity: number = req.body.quantity;
-    const order_id: number = req.body.order_id;
-    const product_id: number = req.body.product_id;
+const addProduct = async (req: Request, res: Response) => {
+  const quantity: number = req.body.quantity;
+  const order_id: number = req.body.order_id;
+  const product_id: number = req.body.product_id;
 
-    const productAdded = await store.addProduct(quantity, order_id, product_id);
-    res.json(productAdded);
-  }
+  const productAdded = await store.addProduct(quantity, order_id, product_id);
+  res.json(productAdded);
+};
 
-  const ordersRoutes = (app: express.Application) => {
-    app.get('/orders', index),
+const ordersRoutes = (app: express.Application) => {
+  app.get('/orders', index),
     app.get('/orders/:id', show),
     app.post('/orders', create),
     app.post('/orders/close/:id', closeOrderStatus),
     app.post('/orders/:id', deleteOrder),
-    app.post('/orders/add-product', addProduct)
-    //app.get('/order-by-user/:user-id', orderByUser)
-    //app.get('/completed-orders/:user-id', completedOrderByUser)
-  };
+    app.post('/orders/add-product', addProduct);
+  //app.get('/order-by-user/:user-id', orderByUser)
+  //app.get('/completed-orders/:user-id', completedOrderByUser)
+};
 
-  export default ordersRoutes;
+export default ordersRoutes;
