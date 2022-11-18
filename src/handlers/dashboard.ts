@@ -15,9 +15,14 @@ const topFiveProducts = async (req: Request, res: Response) => {
 };
 
 const orderByUser = async (req: Request, res: Response) => {
-  const user_id: number = parseInt(req.params.user_id);
-  const orders = await store.orderByUser(user_id);
-  res.json(orders);
+  try {
+    const user_id: number = parseInt(req.params.user_id);
+    const orders = await store.orderByUser(user_id);
+    res.json(orders);
+  } catch (error) {
+    res.send(400);
+    res.json(error);
+  }
 };
 
 const completedOrderByUser = async (req: Request, res: Response) => {
@@ -27,10 +32,10 @@ const completedOrderByUser = async (req: Request, res: Response) => {
 };
 
 const dashboardRoutes = (app: express.Application) => {
-  app.get('/products/:category', productsByCategory);
-    app.get('/top-5-products', topFiveProducts);
-    app.get('/order-by-user/:user-id', orderByUser);
-    app.get('/completed-orders/:user-id', completedOrderByUser);
+  app.get('/products-by-category/:category', productsByCategory);
+  app.get('/top-5-products', topFiveProducts);
+  app.get('/order-by-user/:user-id', orderByUser);
+  app.get('/completed-orders/:user-id', completedOrderByUser);
 };
 
 export default dashboardRoutes;

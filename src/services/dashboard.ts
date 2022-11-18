@@ -46,13 +46,12 @@ export class dashboardQueries {
 
   //  - [OPTIONAL] Products by category (args: product category): '/product-by-category/:category' [GET]
   async productsByCategory(product_category: string): Promise<
-    {
-      id: number;
+    {id: number;
       product_name: string;
       price: number;
       product_category: string;
-    }[]
-  > {
+    }[]> 
+    {
     try {
 
       const conn = await Client.connect();
@@ -71,8 +70,6 @@ export class dashboardQueries {
   }
 
   //- [OPTIONAL] Top 5 most popular products:  '/top-5-products' [GET]
-  // -> Services -> Dashboard????
-  // async topExpensiveProducts (): Promise<{name: string, price: number}[]> {
 
   async topFiveProducts(): Promise<
     {

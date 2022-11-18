@@ -9,7 +9,7 @@ These are the notes from a meeting with the frontend developer that describe wha
 - Show route: '/products/:id' [GET]
 - Create [token required]: '/products' [POST]
 - [OPTIONAL] Top 5 most popular products:  '/top-5-products' [GET]
-- [OPTIONAL] Products by category (args: product category): '/products/:category' [GET]
+- [OPTIONAL] Products by category (args: product category): '/products-by-category/:category' [GET]
 
 #### Users
 - Index [token required]: '/users' [GET]
