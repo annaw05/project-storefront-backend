@@ -49,13 +49,13 @@ const deleteProduct = async (req: Request, res: Response) => {
     res.json(products);
   };
 */
-const ordersRoutes = (app: express.Application) => {
-  app.get('/products', index),
-    app.get('/products/:id', show),
-    app.post('/products', verifyAuthToken, create),
+const productsRoutes = (app: express.Application) => {
+  app.get('/products', index);
+    app.get('/products/:id', show);
+    app.post('/products', verifyAuthToken, create);
     app.post('/products/:id', verifyAuthToken, deleteProduct);
   //app.get('/products/:category', productsByCategory)
   //app.get('/top-5-products', topFiveProducts)
 };
 
-export default ordersRoutes;
+export default productsRoutes;

@@ -1,6 +1,6 @@
  //@ts-ignore: ignore type Client
 import Client from '../database';
-import {Pool } from 'pg';
+import {Pool, PoolClient } from 'pg';
 import bcrypt from 'bcrypt';
 
 const pepper: string = process.env.BCRYPT_PASSWORD as string;
@@ -34,7 +34,7 @@ export class UserStore {
   // - Show [token required]: 'users/:id' [GET]
   async show(id: number): Promise<User> {
     try {
-       //@ts-ignore: ignore type Client
+      
       const conn: PoolClient = await Client.connect();
       const sql = 'SELECT * FROM users WHERE id=($1)';
 
@@ -50,7 +50,7 @@ export class UserStore {
   // - Create N[token required]: '/users' [POST]
   async create(u: User): Promise<User> {
     try {
-       //@ts-ignore: ignore type Client
+      
       const conn: PoolClient = await Client.connect();
       const sql =
         'INSERT INTO users (username, firstname, lastname, password) VALUES ($1, $2, $3, $4) RETURNING *';
@@ -71,22 +71,29 @@ export class UserStore {
     }
   }
 
-  async authenticate(username: string, password: string): Promise<User | null> {
-     //@ts-ignore: ignore type Client
+  async authenticate(username: string, password: string): Promise<User|undefined> {
+     
     const conn: PoolClient = await Client.connect();
     const sql = 'SELECT password FROM users WHERE username=($1)';
 
     const result = await conn.query(sql, [username]);
     console.log(password + pepper);
 
+    // checking if user found with username given
     if (result.rows.length) {
-      const user = result.rows[0];
+      const user: User = result.rows[0];
       console.log(user);
 
+      // checking if password matches
       if (bcrypt.compareSync(password + pepper, user.password)) {
         return user;
+      } else {
+        throw new Error('password invalid')
       }
     }
-    return null;
+    else {
+      throw new Error(`user ${username} not found`);
+    }
+   //return null;
   }
 }

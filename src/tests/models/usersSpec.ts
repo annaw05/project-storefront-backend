@@ -25,7 +25,7 @@ describe('user model------ testing CRUD APIs of user model', () => {
     username:'testUsername1',
     firstname: 'John',
     lastname: 'Doe',
-    password: 'testpassword' ,
+    password: 'testpassword',
   }
 
   const testuser2: User = {
@@ -42,8 +42,17 @@ describe('user model------ testing CRUD APIs of user model', () => {
     expect(result2.firstname).toBe('Jane');
   })
 
-  it('index method should return list of users', async () => {
+  it('should return list of users ----> index method', async () => {
     const result = await store.index();
     expect(result.length).toEqual(2);
   });
+
+  it ('shows a specific user based on id ----> show method', async ()=>{
+     const result = await store.show(1);
+    expect(result.username).toEqual('testUsername1');
+  })
+
+  it('throws error when wrong combination username/password is given ----> authentification method', async()=>{
+    expect(()=> store.authenticate('testUsername1','testpassword5')).toThrowError();
+  })
 });

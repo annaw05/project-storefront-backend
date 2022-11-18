@@ -27,9 +27,9 @@ const completedOrderByUser = async (req: Request, res: Response) => {
 };
 
 const dashboardRoutes = (app: express.Application) => {
-  app.get('/products/:category', productsByCategory),
-    app.get('/top-5-products', topFiveProducts),
-    app.get('/order-by-user/:user-id', orderByUser),
+  app.get('/products/:category', productsByCategory);
+    app.get('/top-5-products', topFiveProducts);
+    app.get('/order-by-user/:user-id', orderByUser);
     app.get('/completed-orders/:user-id', completedOrderByUser);
 };
 
