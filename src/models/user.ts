@@ -18,7 +18,6 @@ export class UserStore {
   // - Index [token required]: '/users' [GET]
   async index(): Promise<User[]> {
     try {
-       
       const conn = await Client.connect();
       const sql = 'SELECT * FROM users';
 
@@ -34,7 +33,6 @@ export class UserStore {
   // - Show [token required]: 'users/:id' [GET]
   async show(id: number): Promise<User> {
     try {
-      
       const conn: PoolClient = await Client.connect();
       const sql = 'SELECT * FROM users WHERE id=($1)';
 
@@ -50,7 +48,6 @@ export class UserStore {
   // - Create N[token required]: '/users' [POST]
   async create(u: User): Promise<User> {
     try {
-      
       const conn: PoolClient = await Client.connect();
       const sql =
         'INSERT INTO users (username, firstname, lastname, password) VALUES ($1, $2, $3, $4) RETURNING *';
@@ -71,12 +68,13 @@ export class UserStore {
     }
   }
 
-  async authenticate(username: string, password: string): Promise<User|undefined> {
-     
+  async authenticate(username: string, password: string): Promise<User> {
     const conn: PoolClient = await Client.connect();
     const sql = 'SELECT password FROM users WHERE username=($1)';
 
     const result = await conn.query(sql, [username]);
+    conn.release();
+    
     console.log(password + pepper);
 
     // checking if user found with username given
@@ -88,12 +86,24 @@ export class UserStore {
       if (bcrypt.compareSync(password + pepper, user.password)) {
         return user;
       } else {
-        throw new Error('password invalid')
+        throw new Error('password invalid');
       }
-    }
-    else {
+    } else {
       throw new Error(`user ${username} not found`);
     }
-   //return null;
+  }
+
+  //method to delete all data inside users table
+  async cleanTableUsers(): Promise<boolean> {
+    try {
+      const conn: PoolClient = await Client.connect();
+      const sql = 'TRUNCATE users RESTART IDENTITY CASCADE';
+      await conn.query(sql);
+      
+      conn.release();
+      return true;
+    } catch (error) {
+      throw new Error('unable to delete data') ;
+    }
   }
 }
