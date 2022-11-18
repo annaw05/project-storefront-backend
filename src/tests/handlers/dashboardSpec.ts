@@ -71,14 +71,14 @@ fdescribe('------ testing order endpoints ------', ()=>{
         expect(response.status).toBe(200);
     })
 
-    xit('COMPLETED ORDER BY USER endpoint: /completed-orders/:user-id [GET] ', async()=>{
+    it('COMPLETED ORDER BY USER endpoint: /completed-orders/:user-id [GET] ', async()=>{
         const response = await request
         .get('/order-by-user/2')
         .set(`Authorization`, `Bearer ${token}`)
         expect(response.status).toBe(200);
     })
 
-    xit('fails COMPLETED ORDER BY USER endpoint: /completed-orders/:user-id [GET] ', async()=>{
+    it('fails COMPLETED ORDER BY USER endpoint: /completed-orders/:user-id [GET] ', async()=>{
         token=token+'ghda';
         const response = await request
         .get('/order-by-user/2')
