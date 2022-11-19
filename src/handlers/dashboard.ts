@@ -1,7 +1,9 @@
 import express, { Request, Response } from 'express';
 import { dashboardQueries } from '../services/dashboard';
+import verifyAuthToken from '../utils/verifyAuth';
 
 const store = new dashboardQueries();
+
 
 const productsByCategory = async (req: Request, res: Response) => {
   const product_category: string = req.body.product_category;
@@ -34,8 +36,8 @@ const completedOrderByUser = async (req: Request, res: Response) => {
 const dashboardRoutes = (app: express.Application) => {
   app.get('/products-by-category/:category', productsByCategory);
   app.get('/top-5-products', topFiveProducts);
-  app.get('/order-by-user/:user-id', orderByUser);
-  app.get('/completed-orders/:user-id', completedOrderByUser);
+  app.get('/orders-by-user/:user_id', orderByUser);
+  app.get('/completed-orders/:user_id', verifyAuthToken, completedOrderByUser);
 };
 
 export default dashboardRoutes;

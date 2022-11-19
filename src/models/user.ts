@@ -68,30 +68,41 @@ export class UserStore {
     }
   }
 
-  async authenticate(username: string, password: string): Promise<User> {
-    const conn: PoolClient = await Client.connect();
-    const sql = 'SELECT password FROM users WHERE username=($1)';
-
-    const result = await conn.query(sql, [username]);
-    conn.release();
-    
-    console.log(password + pepper);
-
-    // checking if user found with username given
-    if (result.rows.length) {
-      const user: User = result.rows[0];
-      console.log(user);
-
-      // checking if password matches
-      if (bcrypt.compareSync(password + pepper, user.password)) {
-        return user;
+  async authenticate(username: string, password: string): Promise<User|string> {   
+    try {
+      const conn: PoolClient = await Client.connect();
+      const sql = 'SELECT password FROM users WHERE username=($1)';
+  
+      const result = await conn.query(sql, [username]);
+      conn.release();
+      
+      //console.log(password + pepper);
+  
+      // checking if user found with username given
+      if (result.rows.length) {
+        const user: User = result.rows[0];
+        //console.log(user);
+  
+        // checking if password matches
+        if (bcrypt.compareSync(password + pepper, user.password)) {
+          return user;
+        } else {
+          console.log('Error: password invalid');
+          //throw new Error('password invalid');
+          return 'Error: password invalid';
+        }
       } else {
-        throw new Error('password invalid');
+        console.log(`Error: user ${username} not found`);
+        //throw new Error(`user ${username} not found`);
+        return `Error: user ${username} not found`;
       }
-    } else {
-      throw new Error(`user ${username} not found`);
+    } catch (error){
+      console.log(`${error}`);
+      return 'Error';
     }
   }
+
+ 
 
   //method to delete all data inside users table
   async cleanTableUsers(): Promise<boolean> {
@@ -107,3 +118,5 @@ export class UserStore {
     }
   }
 }
+
+

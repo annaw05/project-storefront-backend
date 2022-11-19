@@ -1,7 +1,7 @@
 import app from '../../server';
 import supertest from  'supertest';
 import { ProductStore, Product } from '../../models/product';
-import { UserStore, User } from '../../models/user';
+import { User } from '../../models/user';
 
 const request = supertest(app);
 

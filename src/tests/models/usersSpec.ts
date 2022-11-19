@@ -53,8 +53,10 @@ describe('-----------------user model -------------------', ()=> {
       expect(result.username).toEqual('testUsername1');
     })
   
-    xit('throws error when wrong combination username/password is given ----> authentification method', async()=>{
-      expect(()=> store.authenticate('testUsername1','testpassword5')).toThrowError();
+    it('returns null when wrong combination username/password is given ----> authentification method', async()=>{
+      const result = await store.authenticate('testUsername1','testpassword5');
+      expect(result).toBe('Error: password invalid');
+      
     })
   });
 
