@@ -52,6 +52,9 @@ GRANT ALL PRIVILEGES ON DATABASE storefront_test TO storefront_user;
 ```
 db-migrate up
 ```
+#### 1.5. Ports
+- backend: 3000
+- database: 5432
 ### 2. Scripts
 start application: npm run start
 test: npm run test
