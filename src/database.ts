@@ -16,15 +16,14 @@ const {
 
 console.log(ENV);
 
-//const database = ENV ==='test'? POSTGRES_DB_TEST: POSTGRES_DB; 
+//const database = ENV ==='test'? POSTGRES_DB_TEST: POSTGRES_DB;
 //console.log('database '+ database);
 
 const client: Pool = new Pool({
   host: POSTGRES_HOST,
-  database: ENV ==='test'? POSTGRES_DB_TEST: POSTGRES_DB,
+  database: ENV === 'test' ? POSTGRES_DB_TEST : POSTGRES_DB,
   user: POSTGRES_USER,
   password: POSTGRES_PASSWORD
 });
-
 
 export default client;

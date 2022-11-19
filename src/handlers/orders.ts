@@ -67,11 +67,11 @@ const addProduct = async (req: Request, res: Response) => {
 
 const ordersRoutes = (app: express.Application) => {
   app.get('/orders', index);
-    app.get('/orders/:id', show);
-    app.post('/orders', create);
-    app.post('/orders/close/:id', closeOrderStatus);
-    app.post('/orders/:id', deleteOrder);
-    app.post('/orders/add-product', addProduct);
+  app.get('/orders/:id', show);
+  app.post('/orders', create);
+  app.post('/orders/close/:id', closeOrderStatus);
+  app.post('/orders/:id', deleteOrder);
+  app.post('/orders/add-product', addProduct);
   //app.get('/order-by-user/:user-id', orderByUser)
   //app.get('/completed-orders/:user-id', completedOrderByUser)
 };

@@ -4,7 +4,6 @@ import verifyAuthToken from '../utils/verifyAuth';
 
 const store = new dashboardQueries();
 
-
 const productsByCategory = async (req: Request, res: Response) => {
   const product_category: string = req.body.product_category;
   const products = await store.productsByCategory(product_category);

@@ -1,12 +1,11 @@
 import app from '../../server';
-import supertest from  'supertest';
+import supertest from 'supertest';
 import { OrderStore, Order } from '../../models/order';
 import { UserStore, User } from '../../models/user';
 import { ProductStore, Product } from '../../models/product';
 //import { dashboardQueries } from '../../services/dashboard';
 
 const request = supertest(app);
-
 
 /*
 #### Orders
@@ -16,118 +15,111 @@ const request = supertest(app);
 - [OPTIONAL] Products by category (args: product category): '/products-by-category/:category' [GET]
 */
 
-describe('------ testing order endpoints ------', ()=>{
-    const userData = new UserStore();
-    const orderData = new OrderStore();
-    const productData = new ProductStore();
-    
-    
-    let token: string;
+describe('------ testing order endpoints ------', () => {
+  const userData = new UserStore();
+  const orderData = new OrderStore();
+  const productData = new ProductStore();
 
-    beforeAll(async () => {
-      //create users to test create order
-      const testuser1: User = {
-        id:1,
-        username: 'testUsername1',
-        firstname: 'John',
-        lastname: 'Doe',
-        password: 'testpassword'
-      };
+  let token: string;
 
-      const testuser2: User = {
-        id: 2,
-        username: 'testUsername2',
-        firstname: 'Jane',
-        lastname: 'Doe',
-        password: 'testpassword2'
-      };
+  beforeAll(async () => {
+    //create users to test create order
+    const testuser1: User = {
+      id: 1,
+      username: 'testUsername1',
+      firstname: 'John',
+      lastname: 'Doe',
+      password: 'testpassword'
+    };
 
-      await userData.create(testuser1);
-      await userData.create(testuser2);
+    const testuser2: User = {
+      id: 2,
+      username: 'testUsername2',
+      firstname: 'Jane',
+      lastname: 'Doe',
+      password: 'testpassword2'
+    };
 
-      const order123: Order = {
-        user_id: 1,
-        order_status: true
-      };
+    await userData.create(testuser1);
+    await userData.create(testuser2);
 
-      const order124: Order = {
-        user_id: 2,
-        order_status: false
-      };
+    const order123: Order = {
+      user_id: 1,
+      order_status: true
+    };
 
-      await orderData.create(order123);
-      await orderData.create(order124);
+    const order124: Order = {
+      user_id: 2,
+      order_status: false
+    };
 
-      const product1: Product = {
-        product_name: 'sofa',
-        price: 1000,
-        product_category: 'furniture'
-      };
+    await orderData.create(order123);
+    await orderData.create(order124);
 
-      const product2: Product = {
-        product_name: 'picture',
-        price: 50,
-        product_category: 'decoration'
-      };
+    const product1: Product = {
+      product_name: 'sofa',
+      price: 1000,
+      product_category: 'furniture'
+    };
 
-      const product3: Product = {
-        product_name: 'table',
-        price: 100,
-        product_category: 'furniture'
-      };
+    const product2: Product = {
+      product_name: 'picture',
+      price: 50,
+      product_category: 'decoration'
+    };
 
-      await productData.create(product1);
-      await productData.create(product2);
-      await productData.create(product3);
+    const product3: Product = {
+      product_name: 'table',
+      price: 100,
+      product_category: 'furniture'
+    };
 
-      const userRequest =await request
-        .post('/users')
-        .send(testuser2)
-        // to get response in JSON
-        .set('Accept', 'application/json');
-        
-        token = userRequest.body;
-    });
-     
+    await productData.create(product1);
+    await productData.create(product2);
+    await productData.create(product3);
 
+    const userRequest = await request
+      .post('/users')
+      .send(testuser2)
+      // to get response in JSON
+      .set('Accept', 'application/json');
 
-    it('ORDER by USER endpoint: /order-by-user/:user_id [GET] ', async()=>{
-        const response = await request
-        .get('/orders-by-user/1');
-        expect(response.status).toBe(200);
-    })
+    token = userRequest.body;
+  });
 
-    it('COMPLETED ORDER BY USER endpoint: /completed-orders/:user_id [GET] ', async()=>{
-        const response = await request
-        .get('/completed-orders/2')
-        .set(`Authorization`, `Bearer ${token}`)
-        expect(response.status).toBe(200);
-    })
-
-    it('TOP 5 PRODUCTS endpoint: /top-5-products [GET] ', async()=>{
-      const response = await request
-      .get('/top-5-products');
-      expect(response.status).toBe(200);
-  })
-
-  it('PRODUCT BY CATEGORY endpoint: /top-5-products [GET] ', async()=>{
-    const response = await request
-    .get('/products-by-category/furniture');
+  it('ORDER by USER endpoint: /order-by-user/:user_id [GET] ', async () => {
+    const response = await request.get('/orders-by-user/1');
     expect(response.status).toBe(200);
-})
-    
-//
-    it('COMPLETED ORDER BY USER endpoint sends 401 unauthorized: /completed-orders/:user_id [GET] ', async()=>{
-        token=token+'ghda';
-        const response = await request
-        .get('/completed-orders/1')
-        .set(`Authorization`, `Bearer ${token}`)
-        expect(response.status).toBe(401);
-    })
+  });
 
-    afterAll(async()=>{
-      await userData.cleanTableUsers();
-      await orderData.cleanTableOrders();
-  })
+  it('COMPLETED ORDER BY USER endpoint: /completed-orders/:user_id [GET] ', async () => {
+    const response = await request
+      .get('/completed-orders/2')
+      .set(`Authorization`, `Bearer ${token}`);
+    expect(response.status).toBe(200);
+  });
 
-})
+  it('TOP 5 PRODUCTS endpoint: /top-5-products [GET] ', async () => {
+    const response = await request.get('/top-5-products');
+    expect(response.status).toBe(200);
+  });
+
+  it('PRODUCT BY CATEGORY endpoint: /top-5-products [GET] ', async () => {
+    const response = await request.get('/products-by-category/furniture');
+    expect(response.status).toBe(200);
+  });
+
+  //
+  it('COMPLETED ORDER BY USER endpoint sends 401 unauthorized: /completed-orders/:user_id [GET] ', async () => {
+    token = token + 'ghda';
+    const response = await request
+      .get('/completed-orders/1')
+      .set(`Authorization`, `Bearer ${token}`);
+    expect(response.status).toBe(401);
+  });
+
+  afterAll(async () => {
+    await userData.cleanTableUsers();
+    await orderData.cleanTableOrders();
+  });
+});

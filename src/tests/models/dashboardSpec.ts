@@ -85,10 +85,9 @@ describe('testing dashboard queries', () => {
     expect(result[1].price).toBe(100);
   });
 
-
-  afterAll(async()=>{
+  afterAll(async () => {
     await userData.cleanTableUsers();
     await productData.cleanTableProducts();
     await orderData.cleanTableOrders();
-})
+  });
 });

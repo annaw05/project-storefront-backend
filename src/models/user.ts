@@ -1,6 +1,6 @@
- //@ts-ignore: ignore type Client
+//@ts-ignore: ignore type Client
 import Client from '../database';
-import {Pool, PoolClient } from 'pg';
+import { Pool, PoolClient } from 'pg';
 import bcrypt from 'bcrypt';
 
 const pepper: string = process.env.BCRYPT_PASSWORD as string;
@@ -68,21 +68,24 @@ export class UserStore {
     }
   }
 
-  async authenticate(username: string, password: string): Promise<User|string> {   
+  async authenticate(
+    username: string,
+    password: string
+  ): Promise<User | string> {
     try {
       const conn: PoolClient = await Client.connect();
       const sql = 'SELECT password FROM users WHERE username=($1)';
-  
+
       const result = await conn.query(sql, [username]);
       conn.release();
-      
+
       //console.log(password + pepper);
-  
+
       // checking if user found with username given
       if (result.rows.length) {
         const user: User = result.rows[0];
         //console.log(user);
-  
+
         // checking if password matches
         if (bcrypt.compareSync(password + pepper, user.password)) {
           return user;
@@ -96,13 +99,11 @@ export class UserStore {
         //throw new Error(`user ${username} not found`);
         return `Error: user ${username} not found`;
       }
-    } catch (error){
+    } catch (error) {
       console.log(`${error}`);
       return 'Error';
     }
   }
-
- 
 
   //method to delete all data inside users table
   async cleanTableUsers(): Promise<boolean> {
@@ -110,13 +111,11 @@ export class UserStore {
       const conn: PoolClient = await Client.connect();
       const sql = 'TRUNCATE users RESTART IDENTITY CASCADE';
       await conn.query(sql);
-      
+
       conn.release();
       return true;
     } catch (error) {
-      throw new Error('unable to delete data') ;
+      throw new Error('unable to delete data');
     }
   }
 }
-
-

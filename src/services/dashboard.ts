@@ -41,9 +41,7 @@ export class dashboardQueries {
   }
 
   //  - [OPTIONAL] Products by category (args: product category): '/product-by-category/:category' [GET]
-  async productsByCategory(
-    product_category: string
-  ): Promise<
+  async productsByCategory(product_category: string): Promise<
     {
       id: number;
       product_name: string;
