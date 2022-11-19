@@ -3,7 +3,7 @@ import supertest from 'supertest';
 import { OrderStore, Order } from '../../models/order';
 import { UserStore, User } from '../../models/user';
 import { ProductStore, Product } from '../../models/product';
-//import { dashboardQueries } from '../../services/dashboard';
+
 
 const request = supertest(app);
 
@@ -15,7 +15,7 @@ const request = supertest(app);
 - [OPTIONAL] Products by category (args: product category): '/products-by-category/:category' [GET]
 */
 
-describe('------ testing order endpoints ------', () => {
+describe('-----------------endpoints: dashboard queries -------------------', () => {
   const userData = new UserStore();
   const orderData = new OrderStore();
   const productData = new ProductStore();
@@ -23,7 +23,7 @@ describe('------ testing order endpoints ------', () => {
   let token: string;
 
   beforeAll(async () => {
-    //create users to test create order
+    //create users to test order by user
     const testuser1: User = {
       id: 1,
       username: 'testUsername1',
@@ -109,7 +109,6 @@ describe('------ testing order endpoints ------', () => {
     expect(response.status).toBe(200);
   });
 
-  //
   it('COMPLETED ORDER BY USER endpoint sends 401 unauthorized: /completed-orders/:user_id [GET] ', async () => {
     token = token + 'ghda';
     const response = await request

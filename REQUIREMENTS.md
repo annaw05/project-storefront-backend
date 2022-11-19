@@ -45,6 +45,8 @@ Table:
 - status of order (active or complete)
 Table: 
     orders(id: SERIAL PRIMARY KEY, user_id integer[foreign key to users table], status BOOLEAN)
+
+Note: status is false when order is open
 Table: 
     order_products (id: SERIAL PRIMARY KEY, order_id: integer[foreign key to orders table], product_id: integer[foreign key to products table], quantity integer)
 

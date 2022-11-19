@@ -1,6 +1,6 @@
 //@ts-ignore: ignore type Client
 import Client from '../database';
-import { Pool, PoolClient } from 'pg';
+import { PoolClient, QueryResult } from 'pg';
 import bcrypt from 'bcrypt';
 
 const pepper: string = process.env.BCRYPT_PASSWORD as string;
@@ -15,13 +15,13 @@ export type User = {
 };
 
 export class UserStore {
-  // - Index [token required]: '/users' [GET]
+  //index method: shows all users
   async index(): Promise<User[]> {
     try {
       const conn = await Client.connect();
       const sql = 'SELECT * FROM users';
 
-      const result = await conn.query(sql);
+      const result: QueryResult<User> = await conn.query(sql);
 
       conn.release();
 
@@ -30,13 +30,14 @@ export class UserStore {
       throw new Error(`unable to get users: ${error}`);
     }
   }
-  // - Show [token required]: 'users/:id' [GET]
+
+  //show method: show user for given id
   async show(id: number): Promise<User> {
     try {
-      const conn: PoolClient = await Client.connect();
+      const conn = await Client.connect();
       const sql = 'SELECT * FROM users WHERE id=($1)';
 
-      const result = await conn.query(sql, [id]);
+      const result: QueryResult<User> = await conn.query(sql, [id]);
 
       conn.release();
 
@@ -45,15 +46,16 @@ export class UserStore {
       throw new Error(`unable to get user with ${id}: ${error}`);
     }
   }
-  // - Create N[token required]: '/users' [POST]
+
+  //create method: creates user
   async create(u: User): Promise<User> {
     try {
-      const conn: PoolClient = await Client.connect();
+      const conn = await Client.connect();
       const sql =
         'INSERT INTO users (username, firstname, lastname, password) VALUES ($1, $2, $3, $4) RETURNING *';
       const hash = bcrypt.hashSync(u.password + pepper, parseInt(saltRounds));
 
-      const result = await conn.query(sql, [
+      const result: QueryResult<User> = await conn.query(sql, [
         u.username,
         u.firstname,
         u.lastname,
@@ -68,6 +70,7 @@ export class UserStore {
     }
   }
 
+  //authenticate method: verifies username and password
   async authenticate(
     username: string,
     password: string
@@ -76,9 +79,8 @@ export class UserStore {
       const conn: PoolClient = await Client.connect();
       const sql = 'SELECT password FROM users WHERE username=($1)';
 
-      const result = await conn.query(sql, [username]);
+      const result: QueryResult<User> = await conn.query(sql, [username]);
       conn.release();
-
       //console.log(password + pepper);
 
       // checking if user found with username given
@@ -91,12 +93,10 @@ export class UserStore {
           return user;
         } else {
           console.log('Error: password invalid');
-          //throw new Error('password invalid');
           return 'Error: password invalid';
         }
       } else {
         console.log(`Error: user ${username} not found`);
-        //throw new Error(`user ${username} not found`);
         return `Error: user ${username} not found`;
       }
     } catch (error) {

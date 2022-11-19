@@ -2,17 +2,19 @@ import { User, UserStore } from '../../models/user';
 
 const store = new UserStore();
 
-describe('-----------------user model -------------------', () => {
-  describe('user model------ testing user model defined', () => {
+
+
+describe('----------------- model: user -------------------', () => {
+  describe('user model defined', () => {
     it('should have an index method', () => {
       expect(store.index).toBeDefined();
     });
 
-    it('should have an create method', () => {
+    it('should have a create method', () => {
       expect(store.create).toBeDefined();
     });
 
-    it('should have an show method', () => {
+    it('should have a show method', () => {
       expect(store.show).toBeDefined();
     });
 
@@ -21,7 +23,7 @@ describe('-----------------user model -------------------', () => {
     });
   });
 
-  describe('user model------ testing CRUD APIs of user model', () => {
+  describe('CRUD APIs working', () => {
     const testuser1: User = {
       username: 'testUsername1',
       firstname: 'John',
@@ -43,7 +45,7 @@ describe('-----------------user model -------------------', () => {
       expect(result2.firstname).toBe('Jane');
     });
 
-    it('should return list of users ----> index method', async () => {
+    it('should return list of all users ----> index method', async () => {
       const result = await store.index();
       expect(result.length).toEqual(2);
     });

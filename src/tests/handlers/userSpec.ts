@@ -12,7 +12,7 @@ const request = supertest(app);
 const store = new UserStore();
 let token: string;
 
-describe('------ testing user endpoints ------', () => {
+describe('-----------------endpoints: user -------------------', () => {
   const testuser1: User = {
     id: 1,
     username: 'testUsername1',

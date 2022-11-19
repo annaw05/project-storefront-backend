@@ -13,7 +13,7 @@ const request = supertest(app);
 
 const store = new ProductStore();
 let token: string;
-describe('------ testing product endpoints ------', () => {
+describe('-----------------endpoints: product -------------------', () => {
   const product1: Product = {
     product_name: 'sofa',
     price: 1000,

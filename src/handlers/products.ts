@@ -4,17 +4,30 @@ import verifyAuthToken from '../utils/verifyAuth';
 
 const store = new ProductStore();
 
+//Index route: '/products' [GET]
 const index = async (req: Request, res: Response) => {
-  const products = await store.index();
-  res.json(products);
+  try {
+    const products = await store.index();
+    res.json(products);
+  } catch (err) {
+    res.status(400);
+    res.json(err);
+  }
 };
 
+//Show route: '/products/:id' [GET]
 const show = async (req: Request, res: Response) => {
-  const id: number = parseInt(req.params.id);
-  const product = await store.show(id);
-  res.json(product);
+  try {
+    const id: number = parseInt(req.params.id);
+    const product = await store.show(id);
+    res.json(product);
+  } catch (err) {
+    res.status(400);
+    res.json(err);
+  }
 };
 
+//Create [token required]: '/products' [POST]
 const create = async (req: Request, res: Response) => {
   try {
     const product: Product = {
@@ -32,30 +45,22 @@ const create = async (req: Request, res: Response) => {
 };
 
 const deleteProduct = async (req: Request, res: Response) => {
-  const id: number = parseInt(req.params.id);
-  const product = await store.delete(id);
-  res.json(product);
+  try {
+    const id: number = parseInt(req.params.id);
+    const product = await store.delete(id);
+    res.json(product);
+  } catch (err) {
+    res.status(400);
+    res.json(err);
+  }
 };
-/*
-  const productsByCategory = async (req: Request, res: Response) => {
-    const product_category: string = req.body.product_category;
-    const products = await store.productsByCategory(product_category);
-    res.json(products);
-  };
-*/
-/*
-  const topFiveProducts = async (req: Request, res: Response) => {
-    const products = await store.topFiveProducts();
-    res.json(products);
-  };
-*/
+
 const productsRoutes = (app: express.Application) => {
   app.get('/products', index);
   app.get('/products/:id', show);
   app.post('/products', verifyAuthToken, create);
   app.post('/products/:id', verifyAuthToken, deleteProduct);
-  //app.get('/products/:category', productsByCategory)
-  //app.get('/top-5-products', topFiveProducts)
+  
 };
 
 export default productsRoutes;

@@ -1,3 +1,4 @@
+import { QueryResult } from 'pg';
 import Client from '../database';
 
 export type Order = {
@@ -7,12 +8,13 @@ export type Order = {
 };
 
 export class OrderStore {
+  //index method: shows all orders
   async index(): Promise<Order[]> {
     try {
       const conn = await Client.connect();
       const sql = 'SELECT * FROM orders';
 
-      const result = await conn.query(sql);
+      const result: QueryResult<Order> = await conn.query(sql);
 
       conn.release();
 
@@ -22,12 +24,13 @@ export class OrderStore {
     }
   }
 
+  //show method: show order for given id
   async show(id: number): Promise<Order> {
     try {
       const conn = await Client.connect();
       const sql = 'SELECT * FROM orders WHERE id=($1)';
 
-      const result = await conn.query(sql, [id]);
+      const result: QueryResult<Order> = await conn.query(sql, [id]);
 
       conn.release();
 
@@ -37,13 +40,17 @@ export class OrderStore {
     }
   }
 
+  //create method: create order with user-id that created that order and order status
   async create(o: Order): Promise<Order> {
     try {
       const conn = await Client.connect();
       const sql =
         'INSERT INTO orders (user_id, order_status) VALUES ($1, $2) RETURNING *';
 
-      const result = await conn.query(sql, [o.user_id, o.order_status]);
+      const result: QueryResult<Order> = await conn.query(sql, [
+        o.user_id,
+        o.order_status
+      ]);
       const order = result.rows[0];
       conn.release();
 
@@ -53,13 +60,14 @@ export class OrderStore {
     }
   }
 
+  //closeOrderStatus method: set order status to closed (=true)
   async closeOrderStatus(id: number): Promise<Order> {
     try {
       const conn = await Client.connect();
       const sql =
-        'UPDATE orders SET order_status=false WHERE id=($1) RETURNING *';
+        'UPDATE orders SET order_status=true WHERE id=($1) RETURNING *';
 
-      const result = await conn.query(sql, [id]);
+      const result: QueryResult<Order> = await conn.query(sql, [id]);
       const order = result.rows[0];
       conn.release();
 
@@ -69,12 +77,13 @@ export class OrderStore {
     }
   }
 
+  //delete method: deletes specific order for given id
   async delete(id: number): Promise<Order> {
     try {
       const conn = await Client.connect();
       const sql = 'DELETE FROM orders WHERE id=($1) RETURNING *';
 
-      const result = await conn.query(sql, [id]);
+      const result: QueryResult<Order> = await conn.query(sql, [id]);
       const order = result.rows[0];
       conn.release();
 
@@ -84,18 +93,22 @@ export class OrderStore {
     }
   }
 
+  // addProduct method: adds product to an order
   async addProduct(
     quantity: number,
     order_id: number,
     product_id: number
   ): Promise<Order> {
     try {
-      //@ts-ignore: ignore type Client
       const conn = await Client.connect();
       const sql =
         'INSERT INTO order_products (quantity, order_id, product_id) VALUES ($1, $2, $3) RETURNING *';
 
-      const result = await conn.query(sql, [quantity, order_id, product_id]);
+      const result: QueryResult<Order> = await conn.query(sql, [
+        quantity,
+        order_id,
+        product_id
+      ]);
       const order = result.rows[0];
       conn.release();
 
@@ -107,6 +120,7 @@ export class OrderStore {
     }
   }
 
+  //cleanTableOrder methods: deletes all data in table -> used in testing
   async cleanTableOrders(): Promise<boolean> {
     try {
       const conn = await Client.connect();

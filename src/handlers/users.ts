@@ -5,17 +5,34 @@ import verifyAuthToken from '../utils/verifyAuth';
 
 const store = new UserStore();
 
+//Index [token required]: '/users' [GET]
 const index = async (req: Request, res: Response) => {
-  const users = await store.index();
-  res.json(users);
+  try {
+    const users = await store.index();
+    res.json(users);
+  } catch (err){
+     res.status(400);
+    res.json(err);
+  }
+  
+
 };
 
+//Show [token required]: 'users/:id' [GET]
 const show = async (req: Request, res: Response) => {
-  const id: number = parseInt(req.params.id);
-  const user = await store.show(id);
-  res.json(user);
+  try {
+    const id: number = parseInt(req.params.id);
+    const user = await store.show(id);
+    res.json(user);
+  } catch (err){
+     res.status(400);
+    res.json(err);
+  }
+  
+
 };
 
+//Create N[token required]: '/users' [POST]
 const create = async (req: Request, res: Response) => {
   const user: User = {
     username: req.body.username,

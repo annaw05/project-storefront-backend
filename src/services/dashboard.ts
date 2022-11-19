@@ -1,16 +1,20 @@
 //model for dashboard queries
 
+import { QueryResult } from 'pg';
 import Client from '../database';
+import { Order } from '../models/order';
+import { Product } from '../models/product';
 
 export class dashboardQueries {
+  
   //query shows all orders of selected user
   async orderByUser(
     user_id: number
-  ): Promise<{ id: number; user_id: number; order_status: boolean }[]> {
+  ): Promise<Order[]> {
     try {
       const conn = await Client.connect();
       const sql = 'SELECT * FROM orders WHERE user_id=($1)';
-      const result = await conn.query(sql, [user_id]);
+      const result: QueryResult<Order> = await conn.query(sql, [user_id]);
       conn.release();
 
       return result.rows;
@@ -19,16 +23,16 @@ export class dashboardQueries {
     }
   }
 
-  //- [OPTIONAL] Completed Orders by user (args: user id)[token required]: '/completed-orders/:user-id' [GET]
+  //query shows all Completed Orders by user 
   async completedOrderByUser(
     user_id: number
-  ): Promise<{ id: number; user_id: number; order_status: boolean }[]> {
+  ): Promise<Order[]> {
     try {
       const conn = await Client.connect();
       const sql =
-        'SELECT * FROM orders WHERE user_id=($1) AND order_status=false';
+        'SELECT * FROM orders WHERE user_id=($1) AND order_status=true';
 
-      const result = await conn.query(sql, [user_id]);
+      const result: QueryResult<Order> = await conn.query(sql, [user_id]);
 
       conn.release();
 
@@ -40,20 +44,14 @@ export class dashboardQueries {
     }
   }
 
-  //  - [OPTIONAL] Products by category (args: product category): '/product-by-category/:category' [GET]
-  async productsByCategory(product_category: string): Promise<
-    {
-      id: number;
-      product_name: string;
-      price: number;
-      product_category: string;
-    }[]
+  //  query shows Products by category
+  async productsByCategory(product_category: string): Promise<Product[]
   > {
     try {
       const conn = await Client.connect();
       const sql = 'SELECT * FROM products WHERE product_category=($1)';
 
-      const result = await conn.query(sql, [product_category]);
+      const result: QueryResult<Product> = await conn.query(sql, [product_category]);
 
       conn.release();
 
@@ -65,22 +63,16 @@ export class dashboardQueries {
     }
   }
 
-  //- [OPTIONAL] Top 5 most popular products:  '/top-5-products' [GET]
-
-  async topFiveProducts(): Promise<
-    {
-      id: number;
-      product_name: string;
-      price: number;
-      product_category: string;
-    }[]
+  //- [OPTIONAL] Top 5 most popular products
+  //shows top 5 products order by price
+  async topFiveProducts(): Promise<Product[]
   > {
     try {
       const conn = await Client.connect();
       const sql =
         'SELECT product_name, price FROM products ORDER BY price DESC LIMIT 5';
 
-      const result = await conn.query(sql);
+      const result: QueryResult<Product> = await conn.query(sql);
 
       conn.release();
 

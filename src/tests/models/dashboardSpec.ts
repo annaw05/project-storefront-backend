@@ -3,7 +3,7 @@ import { Product, ProductStore } from '../../models/product';
 import { User, UserStore } from '../../models/user';
 import { dashboardQueries } from '../../services/dashboard';
 
-describe('testing dashboard queries', () => {
+describe('-----------------model: dashboard queries -------------------', () => {
   const store = new dashboardQueries();
   const productData = new ProductStore();
   const orderData = new OrderStore();
@@ -53,12 +53,12 @@ describe('testing dashboard queries', () => {
     //create orders
     const order123: Order = {
       user_id: 1,
-      order_status: true
+      order_status: false
     };
 
     const order124: Order = {
       user_id: 2,
-      order_status: false
+      order_status: true
     };
 
     await orderData.create(order123);
@@ -70,9 +70,9 @@ describe('testing dashboard queries', () => {
     expect(result.length).toBe(1);
   });
 
-  it('shows all completed orders of user 2 ----> orderByUser() method', async () => {
+  it('shows all completed orders of user 2 ----> completedOrderByUser() method', async () => {
     const result = await store.completedOrderByUser(2);
-    expect(result[0].order_status).toBeFalse();
+    expect(result[0].order_status).toBeTrue();
   });
 
   it('shows all products for given category ----> productsByCategory() method', async () => {
@@ -80,11 +80,12 @@ describe('testing dashboard queries', () => {
     expect(result.length).toBe(2);
   });
 
-  it('shows top 5 products ----> productsByCategory() method', async () => {
+  it('shows top 5 products ----> topFiveProducts() method', async () => {
     const result = await store.topFiveProducts();
     expect(result[1].price).toBe(100);
   });
 
+  //deletes all data from tables
   afterAll(async () => {
     await userData.cleanTableUsers();
     await productData.cleanTableProducts();
