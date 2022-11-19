@@ -56,9 +56,9 @@ db-migrate up
 - backend: 3000
 - database: 5432
 ### 2. Scripts
-start application: npm run start
-test: npm run test
-compile: npm run build
+- start application: npm run start
+- test: npm run test
+- compile: npm run build
 
 ### 3. Endpoints
 http://localhost:3000/
